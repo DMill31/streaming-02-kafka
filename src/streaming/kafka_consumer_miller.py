@@ -205,15 +205,9 @@ def process_message(row: dict[str, Any]) -> dict[str, Any] | None:
 
     unit_price = row.get("unit_price", 0.0)
 
-    try:
-        price = float(unit_price)
-    except ValueError, TypeError:
-        LOG.warning(f"Invalid unit_price value: {unit_price!r}. Skipping message.")
-        return None
-
-    if price < MIN_PRICE:
+    if unit_price < MIN_PRICE:
         LOG.info(
-            f"Skipping message with unit_price {price:.2f} below threshold {MIN_PRICE:.2f}."
+            f"Skipping message with unit_price {unit_price:.2f} below threshold {MIN_PRICE:.2f}."
         )
         return None
 
