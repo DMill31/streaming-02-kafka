@@ -204,10 +204,11 @@ def process_message(row: dict[str, Any]) -> dict[str, Any] | None:
     LOG.info("Processing raw message.")
 
     unit_price = row.get("unit_price", 0.0)
+    price = float(unit_price)
 
-    if unit_price < MIN_PRICE:
+    if price < MIN_PRICE:
         LOG.info(
-            f"Skipping message with unit_price {unit_price:.2f} below threshold {MIN_PRICE:.2f}."
+            f"Skipping message with unit_price {price:.2f} below threshold {MIN_PRICE:.2f}."
         )
         return None
 
@@ -231,6 +232,7 @@ def consume_messages(consumer: Any) -> int:
     LOG.info("Press CTRL+C to stop early.\n")
 
     consumed_count = 0
+    skipped_count = 0
 
     while consumed_count < MAX_MESSAGES:
         row = consume_kafka_message(
@@ -248,7 +250,9 @@ def consume_messages(consumer: Any) -> int:
         processed = process_message(row)
 
         if processed is None:
+            skipped_count += 1
             LOG.info("MESSAGE SKIPPED")
+            LOG.info(f"skipped={skipped_count}")
             continue
 
         append_csv_row(
