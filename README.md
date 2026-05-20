@@ -108,6 +108,22 @@ cd streaming-02-kafka
 code .
 ```
 
+### Technical Modification
+
+The modification for this project was done on the consumer script.
+
+A new consumer file, named kafka_consumer_miller.py was created with one change from the original.
+
+In this new script, not every message was consumed.
+Only rows where the product price was at least $40.00 were consumed.
+
+I did this to practice the ability of only using certain messages.
+
+When streaming data, you get all the messages from the producer.
+In some cases, perhaps only certain messages are useful for your business question.
+
+For this script, I thought what if the business only wants data of products with higher prices.
+
 ### In VS Code Terminal 1: Start Kafka (kafka)
 
 For full instructions see
