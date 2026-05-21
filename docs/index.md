@@ -23,55 +23,104 @@ to get these projects running on your machine.
 
 ### Dataset
 
-Describe the dataset used by your Kafka producer.
+The Kafka producer uses the sales.csv dataset in the data folder.
 
-Include:
+The dataset contains records of purchases, with each record containing the info:
 
-- the name of the dataset file
-- what kind of records it contains
-- which fields are included in each record
-- whether you used the original sales dataset or modified it
+- order_id
+- datetime
+- region_id
+- currency_code
+- product_id
+- unit_price
+- quantity
+- is_online
+- customer_id
+- is_new_customer
+- device_type
+- payment_method
+- referral_source
+- discount_code
+- customer_note
+
+For this project, the original sales dataset was used.
+Nothing was modified.
 
 ### Kafka Messages
 
-Describe the messages sent through Kafka.
+The script kafka_producer_case.py in the src/streaming folder
+was used to send messages.
 
-Include:
+Each message sent is a row from the sales dataset.
 
-- what your producer sends
-- which Kafka topic you used
-- what message key you used, if any
-- whether you changed the message fields
+The Kafka topic used was streaming-02-kafka-miller.
+
+The region_id field was used as the message key.
+
+The message fields were not altered by the producer.
 
 ### Consumer Processing
 
-Describe what your consumer receives and does with each message.
+The script kafka_consumer_miller.py in the src/streaming folder
+was used to consume messages.
 
-Include:
+Each message received is a row from the sales dataset.
 
-- what your consumer receives from Kafka
-- how many messages it consumes
-- what it logs or prints
-- if it writes records to a CSV file
-- if it processes or filters selected fields (be specific)
+A MAX_MESSAGES variable is created.
+Either the maximum number of messages is consumed or
+the script times out.
+In this case, the maximum number of messages is 5.
+
+The consumer logs
+
+- the original message
+- whether the message is consumed or skipped
+- the count of consumed or skipped messages
+- the output message
+
+After each message is consumed, it is added to an output CSV file.
+
+The consumer filters based on the unit_price field.
+
+Only messages with a unit price of $40.00 or greater are consumed.
 
 ### Experiments
 
-Describe the small technical changes you made.
+For the Phase 4 change, the number of messages sent was increased.
 
-Include at least one Phase 4 change and one Phase 5 application.
+From originally 3 messages sent to now 5 messages sent.
+
+For the Phase 5 application, the messages in the consumer were filtered.
+
+As well as being filtered, the log was also updated to account for
+skipped messages.
 
 ### Results
 
-Describe what happened when you ran the producer and consumer.
+The producer was never altered so it simply sent 5 messages
+from the sales dataset.
+
+The consumer took those 5 messages and consumed 4 of them.
+
+One of the received messages contained a unit_price too low,
+so that message was skipped.
 
 ### Interpretation
 
-Explain what the Kafka streaming workflow showed you.
+The largest change from the original example would be
+the increase in messages sent and received.
 
-Include:
+Watching messages move through Kafka helps show how
+real-time streaming works.
 
-- what changed from the original example
-- what you learned from watching messages move through Kafka
-- what the stream could tell a business or organization
-- what business intelligence was gained from the consumed messages
+Some messages move quickly through the stream whilst others take
+a few more seconds.
+
+The consumer only contained a filter so this could help businesses
+understand orders for their more expensive products.
+
+This means that with only the pricier products in the output,
+patterns can now be found.
+
+This could be patterns in the region, the payment method,
+device type, etc.
